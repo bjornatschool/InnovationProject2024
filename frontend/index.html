@@ -8,8 +8,26 @@
         <style>
             body{
               font-family: 'Source Sans 3';
-              background-color: #111;
+              background-color: #5ea9ff;
               color: white;
+            }
+            #mapimg
+            {
+              color: white;
+              filter: invert();
+            }
+
+            .pan-container{
+              left: 160px;
+              width: 100%;
+
+              height: 100vw;
+
+              overflow: hidden;
+            }
+
+            .main{
+              position: relative;
             }
               /* def not copied from https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp*/
                /* The sidebar menu */
@@ -58,11 +76,42 @@
             <a href="#">GPS</a>
             <a href="#">Options</a>
             <a href="#">Account</a>
-          </div>
+        </div>
           
           <!-- Page content -->
-          <div class="main">
-            ...
-          </div>
+            <canvas id="map" width="500" height="500" style="margin-left: 160px;"></canvas>
     </body>
+    <script>
+      var c;
+
+      c = document.getElementById('map');
+
+      window.onload = window.onresize = function() {
+      
+          c.width = window.innerWidth-160;
+          c.height = window.innerHeight;
+
+          draw()
+      }
+
+      function draw() {
+        const ctx = c.getContext('2d');
+
+    // Create an Image object
+    const img = new Image();
+
+    // Set the source of the image to your SVG file
+    img.src = 'world.svg'; // Adjust the path as needed
+    // Draw the SVG on the canvas when the image loads
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, c.width, c.height); // Fit the image to the canvas
+    };
+
+    // Debugging: Listen for errors
+    img.onerror = () => {
+      console.error('Failed to load SVG. Check the file path.');
+    };
+      }
+
+    </script>
 </html>
