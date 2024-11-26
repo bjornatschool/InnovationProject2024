@@ -5,11 +5,14 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <style>
             body{
               font-family: 'Source Sans 3';
               background-color: #5ea9ff;
               color: white;
+
+              overflow: hidden;
             }
             #mapimg
             {
@@ -86,32 +89,100 @@
 
       c = document.getElementById('map');
 
-      window.onload = window.onresize = function() {
-      
-          c.width = window.innerWidth-160;
-          c.height = window.innerHeight;
+      const ctx = c.getContext('2d');
 
-          draw()
+      const viewportTransform = {
+        x: 0,
+        y: 0,
+        scale: 1
       }
+
+        // We need to keep track of our previous mouse position for later
+let previousX = 0, previousY = 0;
+
+const updatePanning = (e) => {
+  const localX = e.clientX;
+  const localY = e.clientY;
+
+  viewportTransform.x += localX - previousX;
+  viewportTransform.y += localY - previousY;
+
+  previousX = localX;
+  previousY = localY;
+}
+
+const updateZooming = (e) => {
+  const oldScale = viewportTransform.scale;
+  const oldX = viewportTransform.x;
+  const oldY = viewportTransform.y;
+
+  const localX = e.clientX;
+  const localY = e.clientY;
+
+  const previousScale = viewportTransform.scale;
+
+  const newScale = viewportTransform.scale += e.deltaY * -0.01;
+
+  const newX = localX - (localX - oldX) * (newScale / previousScale);
+  const newY = localY - (localY - oldY) * (newScale / previousScale);
+
+  viewportTransform.x = newX;
+  viewportTransform.y = newY;
+  viewportTransform.scale = newScale;
+}
+
+const onMouseMove = (e) => {
+  draw()
+  updatePanning(e)
+  console.log(e)
+}
+
+c.addEventListener("mousedown", (e) => {
+  previousX = e.clientX;
+  previousY = e.clientY;
+
+  c.addEventListener("mousemove", onMouseMove);
+})
+
+c.addEventListener("mouseup", (e) => {
+  c.removeEventListener("mousemove", onMouseMove);
+})
+
+const onMouseWheel = (e) => {
+  updateZooming(e)
+
+  draw()
+
+  console.log(e)
+}
+
+c.addEventListener("wheel", onMouseWheel);
+    // Create an Image object
+
 
       function draw() {
-        const ctx = c.getContext('2d');
 
-    // Create an Image object
-    const img = new Image();
+        const img = new Image();
 
     // Set the source of the image to your SVG file
-    img.src = 'world.svg'; // Adjust the path as needed
+  img.src = 'world.svg'; // Adjust the path as needed
     // Draw the SVG on the canvas when the image loads
     img.onload = () => {
-      ctx.drawImage(img, 0, 0, c.width, c.height); // Fit the image to the canvas
+      ctx.drawImage(img, 0, 0, 1500, 1000); // Fit the image to the canvas
     };
-
-    // Debugging: Listen for errors
-    img.onerror = () => {
-      console.error('Failed to load SVG. Check the file path.');
-    };
+    // New code 👇
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.setTransform(viewportTransform.scale, 0, 0, viewportTransform.scale, viewportTransform.x, viewportTransform.y);
       }
+
+      window.onload = window.onresize = function() {
+      
+        c.width = window.innerWidth-160;
+        c.height = window.innerHeight;
+
+        draw()
+    }
 
     </script>
 </html>
