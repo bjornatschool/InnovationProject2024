@@ -82,8 +82,13 @@
         </div>
           
           <!-- Page content -->
-            <canvas id="map" width="500" height="500" style="margin-left: 160px;"></canvas>
+            <canvas id="map" style="margin-left: 160px;"></canvas>
     </body>
+    <script>
+      
+
+      getLocation()
+    </script>
     <script>
       var c;
 
@@ -91,12 +96,31 @@
 
       const ctx = c.getContext('2d');
 
+      const offscreenCanvas = document.createElement('canvas');
+      const offscreenCtx = offscreenCanvas.getContext('2d');
+
+      const img = new Image();
+img.onload = () => {
+  // Set the size of the offscreen canvas to match the image
+
+  offscreenCanvas.width = img.width*4;
+  offscreenCanvas.height = img.height*4;
+
+  // Draw the image on the offscreen canvas
+  offscreenCtx.drawImage(img, 0, 0, img.width*4, img.height*4);
+
+  ctx.imageSmoothingEnabled = true; // Enable high-quality smoothing
+  ctx.imageSmoothingQuality = 'high'; // Can be 'low', 'medium', or 'high'
+  // Initially draw on the main canvas
+  draw();
+};
+img.src = 'world.svg'; // Adjust the path as needed
+
       const viewportTransform = {
         x: 0,
         y: 0,
         scale: 1
       }
-
         // We need to keep track of our previous mouse position for later
 let previousX = 0, previousY = 0;
 
@@ -134,7 +158,6 @@ const updateZooming = (e) => {
 const onMouseMove = (e) => {
   draw()
   updatePanning(e)
-  console.log(e)
 }
 
 c.addEventListener("mousedown", (e) => {
@@ -152,8 +175,6 @@ const onMouseWheel = (e) => {
   updateZooming(e)
 
   draw()
-
-  console.log(e)
 }
 
 c.addEventListener("wheel", onMouseWheel);
@@ -161,19 +182,18 @@ c.addEventListener("wheel", onMouseWheel);
 
 
       function draw() {
+        ctx.clearRect(0, 0, c.width, c.height); // Clear the main canvas
 
-        const img = new Image();
-
-    // Set the source of the image to your SVG file
-  img.src = 'world.svg'; // Adjust the path as needed
-    // Draw the SVG on the canvas when the image loads
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, 1500, 1000); // Fit the image to the canvas
-    };
-    // New code 👇
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, c.width, c.height);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+  //ctx.setTransform(viewportTransform.scale, 0, 0, viewportTransform.scale, viewportTransform.x, viewportTransform.y);
   ctx.setTransform(viewportTransform.scale, 0, 0, viewportTransform.scale, viewportTransform.x, viewportTransform.y);
+        ctx.drawImage(
+          offscreenCanvas,
+         0,0, c.width*4, c.height*4,
+          0, 0, c.width, c.height
+      );
+    // New code 👇
+  
       }
 
       window.onload = window.onresize = function() {
