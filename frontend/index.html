@@ -87,7 +87,6 @@
     <script>
       
 
-      getLocation()
     </script>
     <script>
       var c;
@@ -103,11 +102,11 @@
 img.onload = () => {
   // Set the size of the offscreen canvas to match the image
 
-  offscreenCanvas.width = img.width*4;
-  offscreenCanvas.height = img.height*4;
+  offscreenCanvas.width = img.width*2;
+  offscreenCanvas.height = img.height*2;
 
   // Draw the image on the offscreen canvas
-  offscreenCtx.drawImage(img, 0, 0, img.width*4, img.height*4);
+  offscreenCtx.drawImage(img, 0, 0, img.width*2, img.height*2);
 
   ctx.imageSmoothingEnabled = true; // Enable high-quality smoothing
   ctx.imageSmoothingQuality = 'high'; // Can be 'low', 'medium', or 'high'
@@ -192,7 +191,6 @@ c.addEventListener("wheel", onMouseWheel);
          0,0, c.width*4, c.height*4,
           0, 0, c.width, c.height
       );
-    // New code 👇
   
       }
 
