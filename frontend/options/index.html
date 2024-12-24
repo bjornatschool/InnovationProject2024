@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>MarineGuard</title>
+        <title>MarineGuard | GPS Mode</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
@@ -89,31 +89,61 @@
                 top:0px;
                 left:0px;
               }
+              body{
+                position: relative;
+                left: 165px;
+                color:#111;
+                background-color: white;
+              }
+              .pref{
+                position: absolute; /* Position relative to the viewport */
+    left: 160px; /* Start right after the sidebar */
+    left: 0; /* Extend to the right edge of the screen */
+    width: calc(100% - 185px); /* Confine within the viewport minus the sidebar */
+    text-align: left; /* Align content to the right */
+    font-size: 15px;
+              }
+              .pref input {
+                position: absolute; /* Position inputs relative to the parent */
+                right: 0; /* Align to the right edge of the parent div */
+                height: 18px;
+                border-width: 0px;
+              }
+              .pref a{
+                font-weight: 700;
+              }
+              h3{
+                font-weight: 400;
+                font-size: large;
+              }
         </style>
     </head>
     <body>
         <div class="sidebar">
-            <a href="#"><i class="fa fa-fw fa-map"></i>Map</a>
-            <a href="gps/"><i class="fa fa-fw fa-compass"></i>GPS</a>
-          <a href="options/"><i class="fa fa-fw fa-gear"></i>Options</a>
-            <a href="account/"><i class="fa fa-fw fa-user"></i>Account</a>
+            <a href="../"><i class="fa fa-fw fa-map"></i>Map</a>
+            <a href="../gps/"><i class="fa fa-fw fa-compass"></i>GPS</a>
+          <a href="#"><i class="fa fa-fw fa-gear"></i>Options</a>
+            <a href="../account/"><i class="fa fa-fw fa-user"></i>Account</a>
         </div>
-          
+        <h2>Options</h2>
+        <div class="pref">
+          <h3>Preferences</h3>
+          <a>Background Color</a> <input id="background" type="color" value="#5ea9ff"><br><br>
+        </div>
           <!-- Page content -->
-            <canvas id="map" style="margin-left: 160px;"></canvas>
+            <!--<canvas id="map" style="margin-left: 160px;"></canvas>-->
     </body>
     <script>
-      
+      const d = new Date();
+      d.setTime(d.getTime() + (30*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
 
-    </script>
-    <script>
+      const backgroundColor = document.getElementById("background");
 
-      let x = document.cookie;
-      function backgroundcolor()
-      {
-        if (x.indexOf("background-color-beans")!=-1)
+      let x = document.cookie
+
+      if (x.indexOf("background-color-beans")!=-1)
       {start = x.indexOf("=", x.indexOf("background-color-beans"))+1
-      var end;
       if (x.indexOf(";", start)==-1)
       {
         end = x.length;
@@ -123,16 +153,25 @@
         end = x.indexOf(";", start)+1
       }
       cookievalue = x.substr(start, end-start)
-      return cookievalue;
+      backgroundColor.value = cookievalue;
     }
       else{
         console.log("No background color set.")
-        return "#5ea9ff";
       }
-    }
-      console.log(document.cookie)
-      document.body.style.background = backgroundcolor();
 
+      
+      backgroundColor.addEventListener("input", function() {
+
+        const newColor = backgroundColor.value; 
+      
+        document.cookie = "background-color-beans="+newColor+";"+expires+";path=/"; 
+      
+        // Update other elements on the page with the new color if needed
+      
+      });
+
+    </script>
+    <script>
       document.addEventListener('touchmove', function(event) {
         event.preventDefault(); // Prevent scrolling and gestures
     }, { passive: false });
@@ -192,8 +231,8 @@ img.onload = () => {
   // Initially draw on the main canvas
   draw();
 }};
-img.src = 'originalworld.svg'; // Adjust the path as needed
-imgb.src = 'boundries.svg'; // Adjust the path as needed
+img.src = '../originalworld.svg'; // Adjust the path as needed
+imgb.src = '../boundries.svg'; // Adjust the path as needed
 
       const viewportTransform = {
         x: 0,
