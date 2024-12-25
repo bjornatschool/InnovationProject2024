@@ -224,7 +224,15 @@ const updateZooming = (e) => {
 
   const previousScale = viewportTransform.scale;
 
-  const newScale = viewportTransform.scale += e.deltaY * -0.01;
+  var newScale = viewportTransform.scale += e.deltaY * -0.01;
+  if (newScale < 1)
+  {
+    newScale = 1;
+  }
+  else if (newScale > 20)
+  {
+    newScale = 20;
+  }
 
   const newX = localX - (localX - oldX) * (newScale / previousScale);
   const newY = localY - (localY - oldY) * (newScale / previousScale);
@@ -232,6 +240,7 @@ const updateZooming = (e) => {
   viewportTransform.x = newX;
   viewportTransform.y = newY;
   viewportTransform.scale = newScale;
+  console.log(newScale)
 }
 
 const onMouseMove = (e) => {
