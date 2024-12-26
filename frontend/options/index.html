@@ -103,7 +103,7 @@
     text-align: left; /* Align content to the right */
     font-size: 15px;
               }
-              .pref input {
+              .pref input{
                 position: absolute; /* Position inputs relative to the parent */
                 right: 0; /* Align to the right edge of the parent div */
                 height: 18px;
@@ -116,10 +116,25 @@
                 font-weight: 400;
                 font-size: large;
               }
+              .pref button{
+                border-radius:4px;
+                border-width:1px;
+                border-color:#111;
+                background-color:rgb(179, 179, 179);
+                font-family: 'Roboto';
+                font-weight: 600;
+              }
+              .pref button:hover{
+                background-color:rgb(194, 194, 194);
+              }
+              .pref button:active{
+                background-color:rgb(129, 129, 129);
+              }
         </style>
     </head>
     <body>
         <div class="sidebar">
+          <a style="position:relative; font-size:25px; color:white; font-weight:700;">Cool Beans</a>
             <a href="../"><i class="fa fa-fw fa-map"></i>Map</a>
             <a href="../gps/"><i class="fa fa-fw fa-compass"></i>GPS</a>
           <a href="#"><i class="fa fa-fw fa-gear"></i>Options</a>
@@ -127,8 +142,9 @@
         </div>
         <h2>Options</h2>
         <div class="pref">
+          <button id="reset">Reset to Default Options</button>
           <h3>Preferences</h3>
-          <a>Background Color</a> <input id="background" type="color" value="#5ea9ff"><br><br>
+          <a>Background Color</a><input id="background" type="color" value="#5ea9ff"><br><br>
         </div>
           <!-- Page content -->
             <!--<canvas id="map" style="margin-left: 160px;"></canvas>-->
@@ -168,6 +184,13 @@
       
         // Update other elements on the page with the new color if needed
       
+      });
+
+      document.getElementById("reset").addEventListener("click", function() {
+        backgroundColor.value = "#5ea9ff";
+        const newColor = "#5ea9ff"; 
+      
+        document.cookie = "background-color-beans="+newColor+";"+expires+";path=/"; 
       });
 
     </script>

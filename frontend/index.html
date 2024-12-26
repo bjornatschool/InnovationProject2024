@@ -89,10 +89,37 @@
                 top:0px;
                 left:0px;
               }
+              .label{
+                background-color: white;
+                position: absolute;
+                left:500px;
+                top:500px;
+                text-align: left;
+                color:black;
+                display: none;
+              }
+              .label2{
+                background-color: white;
+                position: absolute;
+                left:500px;
+                top:500px;
+                text-align: left;
+                color:black;
+                display: none;
+              }
+              #namee{
+                font-size: 25px;
+                font-weight: 400;
+                }
+                #b{
+                  font-weight: 700;
+                }
         </style>
     </head>
     <body>
+      
         <div class="sidebar">
+          <a style="position:relative; font-size:25px; color:white; font-weight:700;">Cool Beans</a>
             <a href="#"><i class="fa fa-fw fa-map"></i>Map</a>
             <a href="gps/"><i class="fa fa-fw fa-compass"></i>GPS</a>
           <a href="options/"><i class="fa fa-fw fa-gear"></i>Options</a>
@@ -101,6 +128,26 @@
           
           <!-- Page content -->
             <canvas id="map" style="margin-left: 160px;"></canvas>
+            <div class="label">
+              <a id="namee">MPA: Montara State Marine Reserve</a><br>
+              <a id="b">Level of Protection: </a><a>No Take (Strict protection)</a><br>
+              <a id="b">Management Agency: </a><a>California Department of Fish and Wildlife</a><br>
+              <a id="b">To Help Protect: </a><br>
+              <a> - No fishing and harvesting</a><br>
+              <a> - Only anchor in approved areas</a><br>
+              <a> - Refrain from disturbing marine life</a><br>
+              <a> - Do not pollute water</a><br>
+              <a> - Report violations</a><br>
+            </div>
+            <div class="label2">
+              <a id="namee">Great Barrier Reef</a><br>
+              <a id="b">To Help Protect: </a><br>
+              <a> - Only anchor in public moorings or anchoring areas</a><br>
+              <a> - Follow speed limits</a><br>
+              <a> - Do not pollute water</a><br>
+              <a> - Stay out of restricted zones</a><br>
+              <a> - Stay in deeper areas of water</a><br>
+            </div>
     </body>
     <script>
       
@@ -175,7 +222,7 @@ document.addEventListener('wheel', function(event) {
 
       const offscreenCanvas = document.createElement('canvas');
       const offscreenCtx = offscreenCanvas.getContext('2d');
-
+      let transparent = true
       const img = new Image();
       const imgb = new Image();
 img.onload = () => {
@@ -187,7 +234,7 @@ img.onload = () => {
 
   // Draw the image on the offscreen canvas
   offscreenCtx.drawImage(img, 0, 0, img.width*2, img.height*2);
-  offscreenCtx.globalAlpha = 0.5;
+  
   offscreenCtx.drawImage(imgb, 0, 0, img.width*2, img.height*2);
   // Initially draw on the main canvas
   draw();
@@ -240,7 +287,6 @@ const updateZooming = (e) => {
   viewportTransform.x = newX;
   viewportTransform.y = newY;
   viewportTransform.scale = newScale;
-  console.log(newScale)
 }
 
 const onMouseMove = (e) => {
@@ -300,19 +346,35 @@ c.addEventListener("wheel", onMouseWheel);
       }
 
       window.onload = window.onresize = function() {
-        c.width = window.innerWidth-160;
-        c.height = window.innerHeight;
+        c.width = window.innerWidth-160+1;
+        c.height = window.innerHeight+1;
 
         draw();
     }
 
-
+    let label = document.getElementsByClassName("label")[0]
+    let label2 = document.getElementsByClassName("label2")[0]
     c.addEventListener('mousemove', (event) => {
       const pos = getMousePosition(event);
       x = pos.x;
       y = pos.y;
-      if (x<10){
-        console.log(x,y)
+      bound1 = [63.5, 174, 3, 3]
+      bound2 = [437, 246, 18, 21]
+      if (x>=bound1[0] && x<=bound1[0]+bound1[2] && y>=bound1[1] && y<=bound1[1]+bound1[3]){
+        label.style.display = "inline"
+        label.style.left = event.clientX+10+"px";
+        label.style.top = event.clientY+15+"px";
+
+        
+      }
+      else if (x>=bound2[0] && x<=bound2[0]+bound2[2] && y>=bound2[1] && y<=bound2[1]+bound2[3]){
+        label2.style.display = "inline"
+        label2.style.left = event.clientX+10+"px";
+        label2.style.top = event.clientY+15+"px";
+      }
+      else{
+        label.style.display = "none"
+        label2.style.display = "none"
       }
   });
     </script>
