@@ -1,2 +1,2 @@
 # InnovationProject2024
-PLEASE SAY WE FINISH YESSS
+frontend stuff for innovation project for FLL 2024-2025
